@@ -1,4 +1,4 @@
-package com.alastair.testanalysis;
+package com.alastair.textanalysis;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,7 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class TestAnalysisApplicationTests {
+public class TextAnalysisApplicationTests {
 
 	@Test
 	public void contextLoads() {

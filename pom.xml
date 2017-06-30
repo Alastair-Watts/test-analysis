@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.alastair</groupId>
-	<artifactId>test-analysis</artifactId>
+	<artifactId>text-analysis</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>test-analysis</name>
+	<name>text-analysis</name>
 	<description>Demo project for Spring Boot</description>
 
 	<parent>
