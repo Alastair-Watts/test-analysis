@@ -1,15 +1,47 @@
 package com.alastair.textanalysis.runner;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
+import com.alastair.textanalysis.service.DocumentAnalysingService;
+import com.alastair.textanalysis.service.DocumentParsingService;
+import com.alastair.textanalysis.service.ServerInstanceService;
+import com.alastair.textanalysis.utils.Constants;
 
 @Component
 public class TextAnalysisRunner implements CommandLineRunner {
 
+	private ServerInstanceService instanceService;
+	private DocumentParsingService parsingService;
+	private DocumentAnalysingService analysisService;
+
+	@Autowired
+	public TextAnalysisRunner(ServerInstanceService instanceService, DocumentParsingService parsingService,
+			DocumentAnalysingService analysisService) {
+		this.instanceService = instanceService;
+		this.parsingService = parsingService;
+		this.analysisService = analysisService;
+	}
+
 	@Override
 	public void run(String... args) throws Exception {
 
-		
-		
+		if (instanceService.isFirstInstance()) {
+			instanceService.createFirstInstance();
+			String sourceFile = getSourceFileName(args);
+			parsingService.parseDocuments(sourceFile);
+		}
+		String sourceFile = getSourceFileName(args);
+		analysisService.analyseDocument(sourceFile);
+	}
+
+	private String getSourceFileName(String[] args) {
+		for (int i = 0; i < args.length; i++) {
+			if (Constants.FILE_LOCATION_PROPERTY.equalsIgnoreCase(args[i])) {
+				return args[i + 1];
+			}
+		}
+		throw new IllegalArgumentException("No source file provided");
 	}
 }

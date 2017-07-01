@@ -34,7 +34,7 @@ public class TextAnalysisRunnerTest {
 	private TextAnalysisRunner textAnalysisRunner;
 
 	@Test
-	public void run_AnotherInstanceRunning_StartsAnalysis() throws Exception {
+	public void run_AnotherInstanceRunning_CreatesInstanceRecordParsesThenAnalyses() throws Exception {
 		Mockito.when(instanceService.isFirstInstance()).thenReturn(true);
 
 		InOrder inOrder = Mockito.inOrder(instanceService, parsingService, analysisService);
@@ -51,7 +51,7 @@ public class TextAnalysisRunnerTest {
 	}
 
 	@Test
-	public void run_NoInstanceRunning_CreatesInstanceRecordParsesThenAnalyses() throws Exception {
+	public void run_NoInstanceRunning_StartsAnalysis() throws Exception {
 		Mockito.when(instanceService.isFirstInstance()).thenReturn(false);
 
 		InOrder inOrder = Mockito.inOrder(instanceService, parsingService, analysisService);
@@ -65,5 +65,35 @@ public class TextAnalysisRunnerTest {
 		inOrder.verify(instanceService, Mockito.times(0)).createFirstInstance();
 		inOrder.verify(parsingService, Mockito.times(0)).parseDocuments(SOURCE_FILE);
 		inOrder.verify(analysisService, Mockito.times(1)).analyseDocument(SOURCE_FILE);
+	}
+
+	@Test
+	public void run_MultipleArgumentsPassed_Analyses() throws Exception {
+		Mockito.when(instanceService.isFirstInstance()).thenReturn(false);
+
+		InOrder inOrder = Mockito.inOrder(instanceService, parsingService, analysisService);
+
+		List<String> args = new ArrayList<>();
+		args.add(Constants.DATABASE_LOCATION_PROPERTY);
+		args.add("somehost:1234");
+		args.add(Constants.FILE_LOCATION_PROPERTY);
+		args.add(SOURCE_FILE);
+		args.add(Constants.SERVER_ID_PROPERTY);
+		args.add("SuperServer5000");
+
+		textAnalysisRunner.run(args.toArray(new String[0]));
+
+		inOrder.verify(instanceService, Mockito.times(0)).createFirstInstance();
+		inOrder.verify(parsingService, Mockito.times(0)).parseDocuments(SOURCE_FILE);
+		inOrder.verify(analysisService, Mockito.times(1)).analyseDocument(SOURCE_FILE);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void run_NoSourceFilename_ThrowsException() throws Exception {
+		Mockito.when(instanceService.isFirstInstance()).thenReturn(false);
+
+		List<String> args = new ArrayList<>();
+
+		textAnalysisRunner.run(args.toArray(new String[0]));
 	}
 }
