@@ -7,7 +7,6 @@ public class DefaultDocumentParsingService implements DocumentParsingService {
 
 	@Override
 	public void parseDocuments(String sourceFile) {
-		// TODO Auto-generated method stub
 		
 	}
 
