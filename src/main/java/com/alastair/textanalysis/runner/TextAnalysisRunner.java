@@ -2,6 +2,7 @@ package com.alastair.textanalysis.runner;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.alastair.textanalysis.service.DocumentAnalysingService;
@@ -10,6 +11,7 @@ import com.alastair.textanalysis.service.ServerInstanceService;
 import com.alastair.textanalysis.utils.Constants;
 
 @Component
+@Profile("!noRunner")
 public class TextAnalysisRunner implements CommandLineRunner {
 
 	private ServerInstanceService instanceService;
