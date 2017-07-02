@@ -50,10 +50,10 @@ public class DefaultDocumentAnalysingServiceTest {
 
 		InOrder inOrder = Mockito.inOrder(wordUseDao);
 
-		inOrder.verify(wordUseDao).registerUse(words.get(0));
-		inOrder.verify(wordUseDao).registerUse(words.get(1));
-		inOrder.verify(wordUseDao).registerUse(words.get(2));
-		inOrder.verify(wordUseDao).registerUse(words.get(3));
-		inOrder.verify(wordUseDao).registerUse(words.get(4));
+		inOrder.verify(wordUseDao).registerUse(words.get(0), documentName);
+		inOrder.verify(wordUseDao).registerUse(words.get(1), documentName);
+		inOrder.verify(wordUseDao).registerUse(words.get(2), documentName);
+		inOrder.verify(wordUseDao).registerUse(words.get(3), documentName);
+		inOrder.verify(wordUseDao).registerUse(words.get(4), documentName);
 	}
 }

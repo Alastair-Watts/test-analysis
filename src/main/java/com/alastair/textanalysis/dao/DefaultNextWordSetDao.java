@@ -2,7 +2,6 @@ package com.alastair.textanalysis.dao;
 
 import static org.springframework.data.mongodb.core.FindAndModifyOptions.options;
 
-import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
