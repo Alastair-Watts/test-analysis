@@ -46,7 +46,7 @@ public class TextAnalysisRunnerTest {
 		textAnalysisRunner.run(args.toArray(new String[0]));
 
 		inOrder.verify(instanceService, Mockito.times(1)).createFirstInstance();
-		inOrder.verify(parsingService, Mockito.times(1)).parseDocuments(SOURCE_FILE);
+		inOrder.verify(parsingService, Mockito.times(1)).parseDocument(SOURCE_FILE);
 		inOrder.verify(analysisService, Mockito.times(1)).analyseDocument(SOURCE_FILE);
 	}
 
@@ -63,7 +63,7 @@ public class TextAnalysisRunnerTest {
 		textAnalysisRunner.run(args.toArray(new String[0]));
 
 		inOrder.verify(instanceService, Mockito.times(0)).createFirstInstance();
-		inOrder.verify(parsingService, Mockito.times(0)).parseDocuments(SOURCE_FILE);
+		inOrder.verify(parsingService, Mockito.times(0)).parseDocument(SOURCE_FILE);
 		inOrder.verify(analysisService, Mockito.times(1)).analyseDocument(SOURCE_FILE);
 	}
 
@@ -84,7 +84,7 @@ public class TextAnalysisRunnerTest {
 		textAnalysisRunner.run(args.toArray(new String[0]));
 
 		inOrder.verify(instanceService, Mockito.times(0)).createFirstInstance();
-		inOrder.verify(parsingService, Mockito.times(0)).parseDocuments(SOURCE_FILE);
+		inOrder.verify(parsingService, Mockito.times(0)).parseDocument(SOURCE_FILE);
 		inOrder.verify(analysisService, Mockito.times(1)).analyseDocument(SOURCE_FILE);
 	}
 

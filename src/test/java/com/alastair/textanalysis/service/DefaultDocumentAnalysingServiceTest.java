@@ -18,7 +18,7 @@ import com.alastair.textanalysis.model.NextWordSet;
 import com.alastair.textanalysis.model.WordSet;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DocumentAnalysingServiceTest {
+public class DefaultDocumentAnalysingServiceTest {
 
 	@Mock
 	private NextWordSetDao nextWordSetDao;
@@ -36,7 +36,7 @@ public class DocumentAnalysingServiceTest {
 	public void analyseDocument_GetsNextSetOfWordsAndRegistersEach() {
 		Integer index = 12;
 		String documentName = "some.thing";
-		Mockito.when(nextWordSetDao.findAndIncrement()).thenReturn(new NextWordSet(documentName, index));
+		Mockito.when(nextWordSetDao.findAndIncrement(documentName)).thenReturn(new NextWordSet(documentName, index));
 		List<String> words = new ArrayList<>();
 		words.add("FirstWord");
 		words.add("SecondWord");

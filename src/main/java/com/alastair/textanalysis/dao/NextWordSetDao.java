@@ -4,6 +4,6 @@ import com.alastair.textanalysis.model.NextWordSet;
 
 public interface NextWordSetDao {
 
-	NextWordSet findAndIncrement();
+	NextWordSet findAndIncrement(String docName);
 
 }

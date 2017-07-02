@@ -32,7 +32,7 @@ public class TextAnalysisRunner implements CommandLineRunner {
 		if (instanceService.isFirstInstance()) {
 			instanceService.createFirstInstance();
 			String sourceFile = getSourceFileName(args);
-			parsingService.parseDocuments(sourceFile);
+			parsingService.parseDocument(sourceFile);
 		}
 		String sourceFile = getSourceFileName(args);
 		analysisService.analyseDocument(sourceFile);

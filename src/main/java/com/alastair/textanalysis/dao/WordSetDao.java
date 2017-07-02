@@ -6,4 +6,6 @@ public interface WordSetDao {
 
 	WordSet getByIndex(Integer index);
 
+	void createWordSet(WordSet capture);
+
 }

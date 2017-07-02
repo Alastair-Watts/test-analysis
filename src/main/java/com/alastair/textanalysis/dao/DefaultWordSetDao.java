@@ -11,4 +11,10 @@ public class DefaultWordSetDao implements WordSetDao {
 		return null;
 	}
 
+	@Override
+	public void createWordSet(WordSet capture) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

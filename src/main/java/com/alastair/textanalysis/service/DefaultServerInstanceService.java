@@ -5,6 +5,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class DefaultServerInstanceService implements ServerInstanceService {
 
+	public DefaultServerInstanceService() {
+	}
+	
 	@Override
 	public boolean isFirstInstance() {
 		// TODO Auto-generated method stub

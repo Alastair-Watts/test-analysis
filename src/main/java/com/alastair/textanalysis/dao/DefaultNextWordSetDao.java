@@ -7,7 +7,7 @@ import com.alastair.textanalysis.model.NextWordSet;
 @Repository
 public class DefaultNextWordSetDao implements NextWordSetDao {
 
-	public NextWordSet findAndIncrement() {
+	public NextWordSet findAndIncrement(String docName) {
 		return null;
 	}
 

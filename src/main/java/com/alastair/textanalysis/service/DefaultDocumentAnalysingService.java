@@ -24,7 +24,7 @@ public class DefaultDocumentAnalysingService implements DocumentAnalysingService
 
 	@Override
 	public void analyseDocument(String sourceFile) {
-		final NextWordSet nextWordInstruction = nextWordSetDao.findAndIncrement();
+		final NextWordSet nextWordInstruction = nextWordSetDao.findAndIncrement(sourceFile);
 		final WordSet wordSet = wordSetDao.getByIndex(nextWordInstruction.getIndex());
 		wordSet.getWords().forEach(wordUseDao::registerUse);
 	}
