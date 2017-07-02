@@ -33,15 +33,15 @@ public class DefaultProcessorInstanceDaoTest {
 		assertEquals(documentName, instance.getValue().getDocumentName());
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test
 	public void findInstance_CallsFind() {
 		String documentName = "a.document";
 		processorInstanceDao.findInstance(documentName);
 		ArgumentCaptor<Query> query = ArgumentCaptor.forClass(Query.class);
-		@SuppressWarnings("rawtypes")
 		ArgumentCaptor<Class> clazz = ArgumentCaptor.forClass(Class.class);
 		Mockito.verify(mongoTemplate, Mockito.times(1)).findOne(query.capture(), clazz.capture());
+
 		assertEquals(1, query.getValue().getQueryObject().keySet().size());
 		assertTrue(query.getValue().getQueryObject().containsField("documentName"));
 		assertEquals(documentName, query.getValue().getQueryObject().get("documentName"));

@@ -4,8 +4,8 @@ import com.alastair.textanalysis.model.WordSet;
 
 public interface WordSetDao {
 
-	WordSet getByIndex(Integer index);
+	WordSet getByIndex(String documentName, Integer index);
 
-	void createWordSet(WordSet capture);
+	void createWordSet(WordSet wordSet);
 
 }

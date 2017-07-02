@@ -44,7 +44,7 @@ public class DefaultDocumentAnalysingServiceTest {
 		words.add("FourthWord");
 		words.add("FirstWord");
 
-		Mockito.when(wordSetDao.getByIndex(index)).thenReturn(new WordSet(documentName, words, index));
+		Mockito.when(wordSetDao.getByIndex(documentName, index)).thenReturn(new WordSet(documentName, words, index));
 
 		documentAnalysingService.analyseDocument(documentName);
 
