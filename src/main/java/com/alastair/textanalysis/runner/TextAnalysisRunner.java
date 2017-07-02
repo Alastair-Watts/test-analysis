@@ -28,13 +28,12 @@ public class TextAnalysisRunner implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
+		String sourceFile = getSourceFileName(args);
 
-		if (instanceService.isFirstInstance()) {
-			instanceService.createFirstInstance();
-			String sourceFile = getSourceFileName(args);
+		if (instanceService.isFirstInstance(sourceFile)) {
+			instanceService.createFirstInstance(sourceFile);
 			parsingService.parseDocument(sourceFile);
 		}
-		String sourceFile = getSourceFileName(args);
 		analysisService.analyseDocument(sourceFile);
 	}
 

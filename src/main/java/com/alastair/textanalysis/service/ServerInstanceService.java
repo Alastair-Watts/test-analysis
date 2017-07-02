@@ -2,8 +2,8 @@ package com.alastair.textanalysis.service;
 
 public interface ServerInstanceService {
 
-	boolean isFirstInstance();
+	boolean isFirstInstance(String documentName);
 
-	void createFirstInstance();
+	void createFirstInstance(String documentName);
 
 }
