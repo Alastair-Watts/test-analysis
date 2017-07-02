@@ -4,25 +4,17 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import com.alastair.textanalysis.TextAnalysisConfig;
-import com.alastair.textanalysis.dao.DefaultProcessorInstanceDao;
+import com.alastair.textanalysis.dao.ProcessorInstanceDao;
 
-@RunWith(SpringRunner.class)
-@ContextConfiguration(classes = { TextAnalysisConfig.class })
-@ActiveProfiles(profiles = "noRunner")
-public class DefaultProcessorInstanceDaoIT {
+public class DefaultProcessorInstanceDaoIT extends DaoIT {
 
 	@Autowired
-	private DefaultProcessorInstanceDao processorInstanceDao;
+	private ProcessorInstanceDao processorInstanceDao;
 
 	@Test
-	public void createInstance_CallsSave() {
+	public void createInstanceSuccessfullyPersisted() {
 		String documentName = "a.document";
 		assertNull(processorInstanceDao.findInstance(documentName));
 		processorInstanceDao.createInstance(documentName);

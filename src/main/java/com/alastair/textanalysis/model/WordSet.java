@@ -4,9 +4,11 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
+@CompoundIndex(def = "{documentName: 1, index: 1}, { unique: true}")
 public class WordSet {
 
 	@Id
