@@ -34,9 +34,13 @@ public class DefaultDocumentParsingService implements DocumentParsingService {
 	@Override
 	@Async
 	public void parseDocument(String sourceFile) {
-		Pattern specialCharacters = Pattern.compile("\\.");
+		Pattern specialCharacters = Pattern.compile("[^A-Za-z0-9]");
 
 		URL systemResource = ClassLoader.getSystemResource(sourceFile);
+
+		if (systemResource == null) {
+			throw new IllegalArgumentException("Could not find source file with name: " + sourceFile);
+		}
 
 		try (Stream<String> allLines = Files.lines(Paths.get(systemResource.toURI()))) {
 			Spliterator<String> spliterator = allLines.map(line -> Stream.of(line.split(" ")))
@@ -54,7 +58,7 @@ public class DefaultDocumentParsingService implements DocumentParsingService {
 			}
 		} catch (IOException | URISyntaxException e) {
 			e.printStackTrace();
-			throw new IllegalStateException("error reading source file: " + sourceFile, e);
+			throw new IllegalStateException("Error processing source file: " + sourceFile, e);
 		}
 	}
 
