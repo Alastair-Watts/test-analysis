@@ -13,16 +13,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.alastair.textanalysis.dao.MaxWordSetDao;
 import com.alastair.textanalysis.dao.WordSetDao;
-import com.alastair.textanalysis.model.MaxWordSet;
 import com.alastair.textanalysis.model.WordSet;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultDocumentParsingServiceTest {
-
-	@Mock
-	private MaxWordSetDao maxWordSetDao;
 
 	@Mock
 	private WordSetDao wordSetDao;
@@ -39,8 +34,6 @@ public class DefaultDocumentParsingServiceTest {
 	@Test
 	public void parseDocument_SmallFile_StoresCorrectLists() {
 		String sourceFile = "simple.test";
-		Mockito.when(maxWordSetDao.findAndIncrement(sourceFile)).thenReturn(new MaxWordSet(sourceFile, 0),
-				new MaxWordSet(sourceFile, 1));
 
 		documentParsingService.parseDocument(sourceFile);
 
@@ -88,7 +81,7 @@ public class DefaultDocumentParsingServiceTest {
 
 		assertTrue(wordSetCaptor.getAllValues().stream()
 				.allMatch(wordSet -> "test.txt".equals(wordSet.getDocumentName())));
-		assertTrue(
-				wordSetCaptor.getAllValues().stream().allMatch(wordSet -> wordSet.getWords().size() <= sizeOfPartition));
+		assertTrue(wordSetCaptor.getAllValues().stream()
+				.allMatch(wordSet -> wordSet.getWords().size() <= sizeOfPartition));
 	}
 }
