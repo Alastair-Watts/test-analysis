@@ -21,6 +21,13 @@ public class WordUsage {
 		count = 0L;
 	}
 
+	public WordUsage() {
+		//no args constructor for Spring Rest Controller
+		this.documentName = "";
+		this.word = "";
+		count = 0L;
+	}
+
 	public Long getCount() {
 		return count;
 	}
