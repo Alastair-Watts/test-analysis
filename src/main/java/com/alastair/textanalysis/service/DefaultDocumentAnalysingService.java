@@ -2,22 +2,17 @@ package com.alastair.textanalysis.service;
 
 import org.springframework.stereotype.Service;
 
-import com.alastair.textanalysis.dao.NextWordSetDao;
 import com.alastair.textanalysis.dao.WordSetDao;
 import com.alastair.textanalysis.dao.WordUseDao;
-import com.alastair.textanalysis.model.NextWordSet;
 import com.alastair.textanalysis.model.WordSet;
 
 @Service
 public class DefaultDocumentAnalysingService implements DocumentAnalysingService {
 
-	private NextWordSetDao nextWordSetDao;
 	private WordSetDao wordSetDao;
 	private WordUseDao wordUseDao;
 
-	public DefaultDocumentAnalysingService(NextWordSetDao nextWordSetDao, WordSetDao wordSetDao,
-			WordUseDao wordUseDao) {
-		this.nextWordSetDao = nextWordSetDao;
+	public DefaultDocumentAnalysingService(WordSetDao wordSetDao, WordUseDao wordUseDao) {
 		this.wordSetDao = wordSetDao;
 		this.wordUseDao = wordUseDao;
 	}
@@ -31,8 +26,6 @@ public class DefaultDocumentAnalysingService implements DocumentAnalysingService
 	}
 
 	private WordSet nextWordSet(String sourceFile) {
-		NextWordSet nextWordInstruction;
-		nextWordInstruction = nextWordSetDao.findAndIncrement(sourceFile);
-		return wordSetDao.getByIndex(sourceFile, nextWordInstruction.getIndex());
+		return wordSetDao.findUnprocessedMarkProcessed(sourceFile);
 	}
 }

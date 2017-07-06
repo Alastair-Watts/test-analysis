@@ -15,12 +15,12 @@ public class WordSet {
 	private ObjectId id;
 	private final String documentName;
 	private final List<String> words;
-	private final Integer index;
+	private final ProcessingStatus status;
 
-	public WordSet(String documentName, List<String> words, Integer index) {
+	public WordSet(String documentName, List<String> words) {
 		this.documentName = documentName;
 		this.words = words;
-		this.index = index;
+		this.status = ProcessingStatus.UNPROCESSED;
 	}
 
 	public String getDocumentName() {
@@ -31,7 +31,7 @@ public class WordSet {
 		return words;
 	}
 
-	public Integer getIndex() {
-		return index;
+	public ProcessingStatus getStatus() {
+		return status;
 	}
 }

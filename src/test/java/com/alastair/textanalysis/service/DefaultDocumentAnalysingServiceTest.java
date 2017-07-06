@@ -11,17 +11,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.alastair.textanalysis.dao.NextWordSetDao;
 import com.alastair.textanalysis.dao.WordSetDao;
 import com.alastair.textanalysis.dao.WordUseDao;
-import com.alastair.textanalysis.model.NextWordSet;
 import com.alastair.textanalysis.model.WordSet;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultDocumentAnalysingServiceTest {
-
-	@Mock
-	private NextWordSetDao nextWordSetDao;
 
 	@Mock
 	private WordSetDao wordSetDao;
@@ -34,10 +29,8 @@ public class DefaultDocumentAnalysingServiceTest {
 
 	@Test
 	public void analyseDocument_GetsNextSetOfWordsAndRegistersEach() {
-		Integer index = 12;
 		String documentName = "some.thing";
-		Mockito.when(nextWordSetDao.findAndIncrement(documentName)).thenReturn(new NextWordSet(documentName, index),
-				new NextWordSet(documentName, index + 1));
+
 		List<String> words = new ArrayList<>();
 		words.add("FirstWord");
 		words.add("SecondWord");
@@ -45,7 +38,8 @@ public class DefaultDocumentAnalysingServiceTest {
 		words.add("FourthWord");
 		words.add("FirstWord");
 
-		Mockito.when(wordSetDao.getByIndex(documentName, index)).thenReturn(new WordSet(documentName, words, index));
+		Mockito.when(wordSetDao.findUnprocessedMarkProcessed(documentName)).thenReturn(new WordSet(documentName, words))
+				.thenReturn(null);
 
 		documentAnalysingService.analyseDocument(documentName);
 
@@ -60,10 +54,8 @@ public class DefaultDocumentAnalysingServiceTest {
 
 	@Test
 	public void analyseDocument_MultipleWordSets_AnalysesAll() {
-		Integer index = 12;
 		String documentName = "some.thing";
-		Mockito.when(nextWordSetDao.findAndIncrement(documentName)).thenReturn(new NextWordSet(documentName, index),
-				new NextWordSet(documentName, index + 1), new NextWordSet(documentName, index + 2));
+
 		List<String> words = new ArrayList<>();
 		words.add("FirstWord");
 		words.add("SecondWord");
@@ -78,9 +70,8 @@ public class DefaultDocumentAnalysingServiceTest {
 		words2.add("NinthWord");
 		words2.add("TenthWord");
 
-		Mockito.when(wordSetDao.getByIndex(documentName, index)).thenReturn(new WordSet(documentName, words, index));
-		Mockito.when(wordSetDao.getByIndex(documentName, index + 1))
-				.thenReturn(new WordSet(documentName, words2, index + 1));
+		Mockito.when(wordSetDao.findUnprocessedMarkProcessed(documentName)).thenReturn(new WordSet(documentName, words),
+				new WordSet(documentName, words2), null);
 
 		documentAnalysingService.analyseDocument(documentName);
 

@@ -46,14 +46,14 @@ public class DefaultDocumentParsingService implements DocumentParsingService {
 			Spliterator<String> spliterator = allLines.map(line -> Stream.of(line.split(" ")))
 					.flatMap(Function.identity()).map(word -> specialCharacters.matcher(word).replaceAll(""))
 					.map(String::toLowerCase).spliterator();
-			for (int i = 0; true; i++) {
+			while (true) {
 				List<String> currentList = new ArrayList<>(sizeOfPartition);
 				while (currentList.size() < sizeOfPartition && spliterator.tryAdvance(currentList::add)) {
 				}
 				if (currentList.isEmpty()) {
 					break;
 				}
-				wordSetDao.createWordSet(new WordSet(sourceFile, new ArrayList<>(currentList), i));
+				wordSetDao.createWordSet(new WordSet(sourceFile, new ArrayList<>(currentList)));
 				currentList.clear();
 			}
 		} catch (IOException | URISyntaxException e) {

@@ -1,6 +1,7 @@
 package com.alastair.textanalysis.dao;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.LinkedList;
 
@@ -11,9 +12,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 
+import com.alastair.textanalysis.model.ProcessingStatus;
 import com.alastair.textanalysis.model.WordSet;
 import com.mongodb.DBObject;
 
@@ -29,30 +33,38 @@ public class DefaultWordSetDaoTest {
 	@Test
 	public void createWordSet_CallsSave() {
 		String documentName = "a-document";
-		WordSet wordSet = new WordSet(documentName, new LinkedList<>(), 5);
+		WordSet wordSet = new WordSet(documentName, new LinkedList<>());
 		wordSetDao.createWordSet(wordSet);
 		Mockito.verify(template).save(wordSet);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Test
-	public void getByIndex_SearchesCorrectly() {
+	public void findUnprocessedMarkProcessed_SearchesCorrectly() {
 		String documentName = "a-document";
-		int index = 5;
-		WordSet wordSet = new WordSet(documentName, new LinkedList<>(), index);
-		Mockito.when(template.findOne(Mockito.any(Query.class), Mockito.any(Class.class))).thenReturn(wordSet);
+		WordSet wordSet = new WordSet(documentName, new LinkedList<>());
+		Mockito.when(
+				template.findAndModify(Mockito.any(Query.class), Mockito.any(Update.class), Mockito.any(Class.class)))
+				.thenReturn(wordSet);
 
-		wordSetDao.getByIndex(documentName, index);
+		wordSetDao.findUnprocessedMarkProcessed(documentName);
 
 		ArgumentCaptor<Query> query = ArgumentCaptor.forClass(Query.class);
+		ArgumentCaptor<Update> update = ArgumentCaptor.forClass(Update.class);
 		ArgumentCaptor<Class> clazz = ArgumentCaptor.forClass(Class.class);
-		Mockito.verify(template).findOne(query.capture(), clazz.capture());
+		ArgumentCaptor<FindAndModifyOptions> options = ArgumentCaptor.forClass(FindAndModifyOptions.class);
+
+		Mockito.verify(template).findAndModify(query.capture(), update.capture(), options.capture(), clazz.capture());
 
 		assertEquals(WordSet.class, clazz.getValue());
 
 		DBObject actualQuery = query.getValue().getQueryObject();
 		assertEquals(2, actualQuery.keySet().size());
 		assertEquals(documentName, actualQuery.get("documentName"));
-		assertEquals(index, actualQuery.get("index"));
+		assertEquals(ProcessingStatus.UNPROCESSED, actualQuery.get("status"));
+
+		DBObject actualUpdate = update.getValue().getUpdateObject();
+		assertEquals(1, actualUpdate.keySet().size());
+		assertTrue(actualUpdate.containsField("$set"));
 	}
 }

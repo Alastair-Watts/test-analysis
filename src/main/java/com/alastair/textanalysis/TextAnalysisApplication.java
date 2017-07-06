@@ -14,8 +14,8 @@ public class TextAnalysisApplication {
 	private static final String DEFAULT_DOCUMENT_NAME = "dump.xml";
 
 	public static void main(String[] args) {
-		SpringApplication.run(TextAnalysisApplication.class, args);
 		documentName = getInputProperty(args, Constants.FILE_LOCATION_PROPERTY);
+		SpringApplication.run(TextAnalysisApplication.class, args);
 	}
 
 	private static String documentName;
