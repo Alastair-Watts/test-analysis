@@ -11,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.alastair.textanalysis.service.DocumentAnalysingService;
 import com.alastair.textanalysis.service.DocumentParsingService;
 import com.alastair.textanalysis.service.ServerInstanceService;
 import com.alastair.textanalysis.utils.Constants;
@@ -27,21 +26,18 @@ public class TextAnalysisRunnerTest {
 	@Mock
 	private DocumentParsingService parsingService;
 
-	@Mock
-	private DocumentAnalysingService analysisService;
-
 	private TextAnalysisRunner textAnalysisRunner;
 
 	@Before
 	public void setup() {
-		textAnalysisRunner = new TextAnalysisRunner(instanceService, parsingService, analysisService, SOURCE_FILE);
+		textAnalysisRunner = new TextAnalysisRunner(instanceService, parsingService, SOURCE_FILE);
 	}
 
 	@Test
 	public void run_AnotherInstanceRunning_CreatesInstanceRecordParsesThenAnalyses() throws Exception {
 		Mockito.when(instanceService.isFirstInstance(SOURCE_FILE)).thenReturn(true);
 
-		InOrder inOrder = Mockito.inOrder(instanceService, parsingService, analysisService);
+		InOrder inOrder = Mockito.inOrder(instanceService, parsingService);
 
 		List<String> args = new ArrayList<>();
 		args.add(Constants.FILE_LOCATION_PROPERTY);
@@ -51,14 +47,13 @@ public class TextAnalysisRunnerTest {
 
 		inOrder.verify(instanceService, Mockito.times(1)).createFirstInstance(SOURCE_FILE);
 		inOrder.verify(parsingService, Mockito.times(1)).parseDocument(SOURCE_FILE);
-		inOrder.verify(analysisService, Mockito.times(1)).analyseDocument(SOURCE_FILE);
 	}
 
 	@Test
 	public void run_NoInstanceRunning_StartsAnalysis() throws Exception {
 		Mockito.when(instanceService.isFirstInstance(SOURCE_FILE)).thenReturn(false);
 
-		InOrder inOrder = Mockito.inOrder(instanceService, parsingService, analysisService);
+		InOrder inOrder = Mockito.inOrder(instanceService, parsingService);
 
 		List<String> args = new ArrayList<>();
 		args.add(Constants.FILE_LOCATION_PROPERTY);
@@ -68,14 +63,13 @@ public class TextAnalysisRunnerTest {
 
 		inOrder.verify(instanceService, Mockito.times(0)).createFirstInstance(SOURCE_FILE);
 		inOrder.verify(parsingService, Mockito.times(0)).parseDocument(SOURCE_FILE);
-		inOrder.verify(analysisService, Mockito.times(1)).analyseDocument(SOURCE_FILE);
 	}
 
 	@Test
 	public void run_MultipleArgumentsPassed_Analyses() throws Exception {
 		Mockito.when(instanceService.isFirstInstance(SOURCE_FILE)).thenReturn(false);
 
-		InOrder inOrder = Mockito.inOrder(instanceService, parsingService, analysisService);
+		InOrder inOrder = Mockito.inOrder(instanceService, parsingService);
 
 		List<String> args = new ArrayList<>();
 		args.add(Constants.DATABASE_LOCATION_PROPERTY);
@@ -89,6 +83,5 @@ public class TextAnalysisRunnerTest {
 
 		inOrder.verify(instanceService, Mockito.times(0)).createFirstInstance(SOURCE_FILE);
 		inOrder.verify(parsingService, Mockito.times(0)).parseDocument(SOURCE_FILE);
-		inOrder.verify(analysisService, Mockito.times(1)).analyseDocument(SOURCE_FILE);
 	}
 }

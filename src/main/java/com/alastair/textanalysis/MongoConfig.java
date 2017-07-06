@@ -15,7 +15,7 @@ public class MongoConfig extends AbstractMongoConfiguration {
 
 	@Override
 	protected String getDatabaseName() {
-		return "db";
+		return "Text-Analysis-Database";
 	}
 
 	@Override

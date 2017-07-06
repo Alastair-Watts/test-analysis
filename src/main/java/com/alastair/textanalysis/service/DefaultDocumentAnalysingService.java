@@ -11,21 +11,17 @@ public class DefaultDocumentAnalysingService implements DocumentAnalysingService
 
 	private WordSetDao wordSetDao;
 	private WordUseDao wordUseDao;
+	private String documentName;
 
-	public DefaultDocumentAnalysingService(WordSetDao wordSetDao, WordUseDao wordUseDao) {
+	public DefaultDocumentAnalysingService(WordSetDao wordSetDao, WordUseDao wordUseDao, String documentName) {
 		this.wordSetDao = wordSetDao;
 		this.wordUseDao = wordUseDao;
+		this.documentName = documentName;
 	}
 
 	@Override
-	public void analyseDocument(String sourceFile) {
-		WordSet wordSet;
-		while ((wordSet = nextWordSet(sourceFile)) != null) {
-			wordSet.getWords().forEach(word -> wordUseDao.registerUse(word, sourceFile));
-		}
-	}
-
-	private WordSet nextWordSet(String sourceFile) {
-		return wordSetDao.findUnprocessedMarkProcessed(sourceFile);
+	public void analyse() {
+		WordSet wordSet = wordSetDao.findUnprocessedMarkProcessed(documentName);
+		wordSet.getWords().forEach(word -> wordUseDao.registerUse(word, documentName));
 	}
 }
