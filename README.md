@@ -2,7 +2,7 @@
 Solution to The Challenge
 
 
-To run use the command java -Xmx8192m -jar challenge.jar -source dump.xml -mongo [hostname]:[port]
+To run use the command `java -Xmx8192m -jar challenge.jar -source dump.xml -mongo [hostname]:[port]` while in the solution directory where a compiled jar is provided.
 
 The dump file must be in the file with the jar.
 
