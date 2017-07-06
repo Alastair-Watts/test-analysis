@@ -1,6 +1,8 @@
 package com.alastair.textanalysis.service;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -38,11 +40,25 @@ public class DefaultDocumentParsingService implements DocumentParsingService {
 
 		URL systemResource = ClassLoader.getSystemResource(sourceFile);
 
+		File file;
 		if (systemResource == null) {
+			file = new File(sourceFile);
+		} else {
+			try {
+				file = new File(systemResource.toURI());
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+				throw new IllegalArgumentException("Could not find source file with name: " + sourceFile);
+			}
+		}
+
+		if (!file.exists()) {
 			throw new IllegalArgumentException("Could not find source file with name: " + sourceFile);
 		}
 
-		try (Stream<String> allLines = Files.lines(Paths.get(systemResource.toURI()))) {
+		URI resourceLocation = file.toURI();
+
+		try (Stream<String> allLines = Files.lines(Paths.get(resourceLocation))) {
 			Spliterator<String> spliterator = allLines.map(line -> Stream.of(line.split(" ")))
 					.flatMap(Function.identity()).map(word -> specialCharacters.matcher(word).replaceAll(""))
 					.map(String::toLowerCase).spliterator();
@@ -56,7 +72,7 @@ public class DefaultDocumentParsingService implements DocumentParsingService {
 				wordSetDao.createWordSet(new WordSet(sourceFile, new ArrayList<>(currentList)));
 				currentList.clear();
 			}
-		} catch (IOException | URISyntaxException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 			throw new IllegalStateException("Error processing source file: " + sourceFile, e);
 		}
