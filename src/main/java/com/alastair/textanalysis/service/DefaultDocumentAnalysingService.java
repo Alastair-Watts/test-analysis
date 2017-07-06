@@ -1,5 +1,6 @@
 package com.alastair.textanalysis.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.alastair.textanalysis.dao.WordSetDao;
@@ -22,6 +23,12 @@ public class DefaultDocumentAnalysingService implements DocumentAnalysingService
 	@Override
 	public void analyse() {
 		WordSet wordSet = wordSetDao.findUnprocessedMarkProcessed(documentName);
-		wordSet.getWords().forEach(word -> wordUseDao.registerUse(word, documentName));
+
+		if (wordSet == null) {
+			return;
+		}
+
+		wordSet.getWords().stream().filter(StringUtils::isNotBlank)
+				.forEach(word -> wordUseDao.registerUse(word, documentName));
 	}
 }

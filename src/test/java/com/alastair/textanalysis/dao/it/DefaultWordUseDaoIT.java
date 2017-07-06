@@ -40,14 +40,14 @@ public class DefaultWordUseDaoIT extends DaoIT {
 
 	@Test
 	public void registerUse_MostUsedCorrect() {
-		assertEquals(commonWord, wordUseDao.getMostUsed(document1).getWord());
-		assertEquals(uncommonWord, wordUseDao.getMostUsed(document2).getWord());
+		assertEquals(commonWord, wordUseDao.getMostUsed(document1).get(0).getWord());
+		assertEquals(uncommonWord, wordUseDao.getMostUsed(document2).get(0).getWord());
 	}
 
 	@Test
 	public void registerUse_LeastUsedCorrect() {
-		assertEquals(commonWord, wordUseDao.getMostUsed(document1).getWord());
-		assertEquals(uncommonWord, wordUseDao.getMostUsed(document2).getWord());
+		assertEquals(commonWord, wordUseDao.getMostUsed(document1).get(0).getWord());
+		assertEquals(uncommonWord, wordUseDao.getMostUsed(document2).get(0).getWord());
 	}
 
 	@Test

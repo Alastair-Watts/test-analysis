@@ -1,5 +1,10 @@
 package com.alastair.textanalysis.service;
 
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,8 +48,7 @@ public class DefaultDocumentAnalysingServiceTest {
 		words.add("FourthWord");
 		words.add("FirstWord");
 
-		Mockito.when(wordSetDao.findUnprocessedMarkProcessed(documentName)).thenReturn(new WordSet(documentName, words))
-				.thenReturn(null);
+		when(wordSetDao.findUnprocessedMarkProcessed(documentName)).thenReturn(new WordSet(documentName, words));
 
 		documentAnalysingService.analyse();
 
@@ -55,5 +59,15 @@ public class DefaultDocumentAnalysingServiceTest {
 		inOrder.verify(wordUseDao).registerUse(words.get(2), documentName);
 		inOrder.verify(wordUseDao).registerUse(words.get(3), documentName);
 		inOrder.verify(wordUseDao).registerUse(words.get(4), documentName);
+	}
+
+	@Test
+	public void analyse_NoWordSet_DoesNothing() {
+
+		when(wordSetDao.findUnprocessedMarkProcessed(documentName)).thenReturn(null);
+
+		documentAnalysingService.analyse();
+
+		verify(wordUseDao, never()).registerUse(anyString(), anyString());
 	}
 }

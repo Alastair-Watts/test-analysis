@@ -2,6 +2,10 @@ package com.alastair.textanalysis.dao;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -76,7 +80,7 @@ public class DefaultWordUseDaoTest {
 	public void getUsage_NoUsage_ReturnsEmptyUsage() {
 		String word = "MotionCitySoundtrack";
 		String documentName = "d.io";
-		Mockito.when(template.findOne(Mockito.any(Query.class), Mockito.any(Class.class))).thenReturn(null);
+		Mockito.when(template.find(Mockito.any(Query.class), Mockito.any(Class.class))).thenReturn(new ArrayList<>());
 
 		WordUsage usage = wordUseDao.getUsage(word, documentName);
 		assertEquals(word, usage.getWord());
@@ -89,11 +93,16 @@ public class DefaultWordUseDaoTest {
 	public void getMostUsed_FiltersOnDocumentName() {
 		String word = "Gotye";
 		String documentName = "d.io";
-		WordUsage expectedUsage = new WordUsage(documentName, word);
-		Mockito.when(template.findOne(Mockito.any(Query.class), Mockito.any(Class.class))).thenReturn(expectedUsage);
+		WordUsage expectedMaximumUsage = new WordUsage(documentName, word);
+		Mockito.when(template.findOne(Mockito.any(Query.class), Mockito.any(Class.class)))
+				.thenReturn(expectedMaximumUsage);
 
-		WordUsage usage = wordUseDao.getMostUsed(documentName);
-		assertEquals(expectedUsage, usage);
+		WordUsage expectedUsage = new WordUsage(documentName, word);
+		Mockito.when(template.find(Mockito.any(Query.class), Mockito.any(Class.class)))
+				.thenReturn(Arrays.asList(expectedUsage));
+
+		List<WordUsage> usage = wordUseDao.getMostUsed(documentName);
+		assertEquals(expectedUsage, usage.get(0));
 
 		ArgumentCaptor<Query> query = ArgumentCaptor.forClass(Query.class);
 		ArgumentCaptor<Class> entityClass = ArgumentCaptor.forClass(Class.class);
@@ -103,6 +112,14 @@ public class DefaultWordUseDaoTest {
 
 		assertEquals(1, queryObject.keySet().size());
 		assertEquals(documentName, queryObject.get("documentName"));
+
+		Mockito.verify(template).find(query.capture(), entityClass.capture());
+
+		DBObject multiQueryObject = query.getValue().getQueryObject();
+
+		assertEquals(2, multiQueryObject.keySet().size());
+		assertEquals(0L, multiQueryObject.get("count"));
+		assertEquals(documentName, queryObject.get("documentName"));
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -110,11 +127,16 @@ public class DefaultWordUseDaoTest {
 	public void getLeastUsed_FiltersOnDocumentName() {
 		String word = "Panic!AtTheDisco";
 		String documentName = "d.io";
-		WordUsage expectedUsage = new WordUsage(documentName, word);
-		Mockito.when(template.findOne(Mockito.any(Query.class), Mockito.any(Class.class))).thenReturn(expectedUsage);
+		WordUsage expectedMinimumUsage = new WordUsage(documentName, word);
+		Mockito.when(template.findOne(Mockito.any(Query.class), Mockito.any(Class.class)))
+				.thenReturn(expectedMinimumUsage);
 
-		WordUsage usage = wordUseDao.getLeastUsed(documentName);
-		assertEquals(expectedUsage, usage);
+		WordUsage expectedUsage = new WordUsage(documentName, word);
+		Mockito.when(template.find(Mockito.any(Query.class), Mockito.any(Class.class)))
+				.thenReturn(Arrays.asList(expectedUsage));
+
+		List<WordUsage> usage = wordUseDao.getMostUsed(documentName);
+		assertEquals(expectedUsage, usage.get(0));
 
 		ArgumentCaptor<Query> query = ArgumentCaptor.forClass(Query.class);
 		ArgumentCaptor<Class> entityClass = ArgumentCaptor.forClass(Class.class);
@@ -123,6 +145,14 @@ public class DefaultWordUseDaoTest {
 		DBObject queryObject = query.getValue().getQueryObject();
 
 		assertEquals(1, queryObject.keySet().size());
+		assertEquals(documentName, queryObject.get("documentName"));
+
+		Mockito.verify(template).find(query.capture(), entityClass.capture());
+
+		DBObject multiQueryObject = query.getValue().getQueryObject();
+
+		assertEquals(2, multiQueryObject.keySet().size());
+		assertEquals(0L, multiQueryObject.get("count"));
 		assertEquals(documentName, queryObject.get("documentName"));
 	}
 }

@@ -1,5 +1,7 @@
 package com.alastair.textanalysis.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,13 +26,13 @@ public class ResultsController {
 
 	@ResponseStatus(code = HttpStatus.OK)
 	@GetMapping(path = CHALLENGE_MAX, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public WordUsage mostUsedWord() {
+	public List<WordUsage> mostUsedWord() {
 		return wordUseDao.getMostUsed(documentName);
 	}
 
 	@ResponseStatus(code = HttpStatus.OK)
 	@GetMapping(path = CHALLENGE_MIN, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public WordUsage leastUsedWord() {
+	public List<WordUsage> leastUsedWord() {
 		return wordUseDao.getLeastUsed(documentName);
 	}
 

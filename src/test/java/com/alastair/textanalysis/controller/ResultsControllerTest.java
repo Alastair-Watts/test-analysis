@@ -3,6 +3,9 @@ package com.alastair.textanalysis.controller;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,14 +30,14 @@ public class ResultsControllerTest {
 
 	@Test
 	public void mostUsedWord_CallsDao() {
-		WordUsage value = new WordUsage(documentName, "WORD");
+		List<WordUsage> value = Arrays.asList(new WordUsage(documentName, "WORD"));
 		when(wordUseDao.getMostUsed(documentName)).thenReturn(value);
 		assertEquals(value, resultsController.mostUsedWord());
 	}
 
 	@Test
 	public void leastUsedWord_CallsDao() {
-		WordUsage value = new WordUsage(documentName, "WORD");
+		List<WordUsage> value = Arrays.asList(new WordUsage(documentName, "WORD"));
 		when(wordUseDao.getLeastUsed(documentName)).thenReturn(value);
 		assertEquals(value, resultsController.leastUsedWord());
 	}

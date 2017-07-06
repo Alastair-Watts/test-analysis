@@ -1,5 +1,7 @@
 package com.alastair.textanalysis.dao;
 
+import java.util.List;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -37,19 +39,26 @@ public class DefaultWordUseDao implements WordUseDao {
 	}
 
 	@Override
-	public WordUsage getMostUsed(String document) {
-		return wordUsage(document, MAX);
+	public List<WordUsage> getMostUsed(String document) {
+		WordUsage wordUsage = wordUsage(document, MAX);
+		return getByCount(wordUsage.getCount(), document);
 	}
 
 	@Override
-	public WordUsage getLeastUsed(String document) {
-		return wordUsage(document, MIN);
+	public List<WordUsage> getLeastUsed(String document) {
+		WordUsage wordUsage = wordUsage(document, MIN);
+		return getByCount(wordUsage.getCount(), document);
 	}
-	
+
+	private List<WordUsage> getByCount(Long count, String document) {
+		Query query = withDocumentName(document);
+		query.addCriteria(Criteria.where("count").is(count));
+		return template.find(query, WordUsage.class);
+	}
+
 	private WordUsage wordUsage(String document, Direction direction) {
 		Query query = withDocumentName(document);
 		query.with(new Sort(direction, "count"));
-		query.limit(1);
 		return wordUsage(query);
 	}
 

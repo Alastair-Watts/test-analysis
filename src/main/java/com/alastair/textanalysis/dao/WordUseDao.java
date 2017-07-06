@@ -1,5 +1,7 @@
 package com.alastair.textanalysis.dao;
 
+import java.util.List;
+
 import com.alastair.textanalysis.model.WordUsage;
 
 public interface WordUseDao {
@@ -8,7 +10,7 @@ public interface WordUseDao {
 
 	WordUsage getUsage(String word, String documents);
 
-	WordUsage getMostUsed(String document);
+	List<WordUsage> getMostUsed(String document);
 
-	WordUsage getLeastUsed(String document);
+	List<WordUsage> getLeastUsed(String document);
 }
