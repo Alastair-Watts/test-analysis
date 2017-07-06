@@ -17,32 +17,24 @@ public class TextAnalysisRunner implements CommandLineRunner {
 	private ServerInstanceService instanceService;
 	private DocumentParsingService parsingService;
 	private DocumentAnalysingService analysisService;
+	private String documentName;
 
 	@Autowired
 	public TextAnalysisRunner(ServerInstanceService instanceService, DocumentParsingService parsingService,
-			DocumentAnalysingService analysisService) {
+			DocumentAnalysingService analysisService, String documentName) {
 		this.instanceService = instanceService;
 		this.parsingService = parsingService;
 		this.analysisService = analysisService;
+		this.documentName = documentName;
 	}
 
 	@Override
 	public void run(String... args) throws Exception {
-		String sourceFile = getSourceFileName(args);
-
-		if (instanceService.isFirstInstance(sourceFile)) {
-			instanceService.createFirstInstance(sourceFile);
-			parsingService.parseDocument(sourceFile);
+		if (instanceService.isFirstInstance(documentName)) {
+			instanceService.createFirstInstance(documentName);
+			parsingService.parseDocument(documentName);
 		}
-		analysisService.analyseDocument(sourceFile);
+		analysisService.analyseDocument(documentName);
 	}
 
-	private String getSourceFileName(String[] args) {
-		for (int i = 0; i < args.length; i++) {
-			if (Constants.FILE_LOCATION_PROPERTY.equalsIgnoreCase(args[i])) {
-				return args[i + 1];
-			}
-		}
-		throw new IllegalArgumentException("No source file provided");
-	}
 }

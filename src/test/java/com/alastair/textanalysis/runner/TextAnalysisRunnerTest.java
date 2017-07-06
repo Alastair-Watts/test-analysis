@@ -3,10 +3,10 @@ package com.alastair.textanalysis.runner;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -30,8 +30,12 @@ public class TextAnalysisRunnerTest {
 	@Mock
 	private DocumentAnalysingService analysisService;
 
-	@InjectMocks
 	private TextAnalysisRunner textAnalysisRunner;
+
+	@Before
+	public void setup() {
+		textAnalysisRunner = new TextAnalysisRunner(instanceService, parsingService, analysisService, SOURCE_FILE);
+	}
 
 	@Test
 	public void run_AnotherInstanceRunning_CreatesInstanceRecordParsesThenAnalyses() throws Exception {
@@ -86,12 +90,5 @@ public class TextAnalysisRunnerTest {
 		inOrder.verify(instanceService, Mockito.times(0)).createFirstInstance(SOURCE_FILE);
 		inOrder.verify(parsingService, Mockito.times(0)).parseDocument(SOURCE_FILE);
 		inOrder.verify(analysisService, Mockito.times(1)).analyseDocument(SOURCE_FILE);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void run_NoSourceFilename_ThrowsException() throws Exception {
-		List<String> args = new ArrayList<>();
-
-		textAnalysisRunner.run(args.toArray(new String[0]));
 	}
 }
