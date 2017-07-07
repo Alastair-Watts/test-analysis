@@ -12,3 +12,5 @@ The results of min and max occurring words can be found at:
 
  - http://localhost:8080/challenge/max
  - http://localhost:8080/challenge/min
+
+These will only be correct once all words have beenm processed.
